@@ -70,7 +70,7 @@ class CheckersGame:
         return actions
 
     def get_piece(self, action):
-        if action[2] - action [0] > 1:
+        if abs(action[2] - action [0]) > 1:
             captured_row = (action[0] + action[2]) // 2
             captured_col = (action[1] + action[3]) // 2
             # jump
