@@ -4,12 +4,12 @@
 
 Using following command:
 
-```python
+```powershell
 python -m venv <name_of_venv>
 ```
 
 ## Install requirements
 
-```python
+```powershell
 pip install -r requirements.txt
 ```

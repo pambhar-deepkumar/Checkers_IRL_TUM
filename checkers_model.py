@@ -1,15 +1,14 @@
 import numpy as np
 
-class CheckersGame:
-
+class CheckersGame:    
     def __init__(self, board_size=8, player=1):
         if board_size not in [6,8,10]:
             raise ValueError("Board size must be 6, 8 or 10")
         self.board_size = board_size
-        self.board = self.reset()
+        self.board = self.initialize()
         self.player = player
 
-    def reset(self):
+    def initialize(self):
         board = np.zeros((self.board_size, self.board_size))
         
         # place the pieces for player 1 (denoted by 1) and player -1 (denoted by -1)
@@ -36,12 +35,15 @@ class CheckersGame:
         return [(i, j) for i, row in enumerate(self.board)
                 for j, value in enumerate(row) if value == player]
 
-    def possible_actions(self, player):
+    def generate_legal_moves(self, player):
         """
-        Returns a list of possible actions for the player
+        Generates a list of all legal moves available to the player.
 
         Args:
-            player (_type_): _description_
+            player (int): The player number (1 or -1) for whom to generate moves.
+
+        Returns:
+            list: A list of tuples representing legal moves.
         """
         def is_valid_position(x, y):
             """
@@ -51,7 +53,6 @@ class CheckersGame:
 
         actions = []
         starters = self.available_pieces_of_the_player(player)
-        # Only forward movement are possible and hence the direction is determined by the player
         directions = [(1, -1), (1, 1)] if player == 1 else [(-1, -1), (-1, 1)]
 
         for x, y in starters:
@@ -81,36 +82,54 @@ class CheckersGame:
             return 1
         elif np.sum(self.board>0) == 0:
             return -1
-        elif len(self.possible_actions(-1)) == 0:
-            return -1
-        elif len(self.possible_actions(1)) == 0:
+        elif len(self.generate_legal_moves(-1)) == 0:
             return 1
+        elif len(self.generate_legal_moves(1)) == 0:
+            return -1
         else:
             return 0
 
-    def step(self, action, player):
-        row1, co1, row2, co2 = action
-        if action in self.possible_actions(player):
-            self.board[row1][co1] = 0
-            self.board[row2][co2] = player
-            self.get_piece(action)
-            if self.game_winner() == player:
-                reward = 1
-            else:
-                reward = 0
-        else:
-            reward = 0
+    def perform_action_and_evaluate(self, action, player):
+        """Performs a step in the checkers game.
 
-        return reward
+        Args:
+            action (tuple): The action to be taken in the form (row1, col1, row2, col2).
+            player (int): The player making the move. 1 for player 1, -1 for player 2.
+
+        Returns:
+            tuple: A tuple containing the updated game board and the reward obtained from the step.
+        """
+        reward = 0
+        row1, col1, row2, col2 = action
+        if action in self.generate_legal_moves(player):
+            self.board[row1][col1] = 0
+            self.board[row2][col2] = player
+            self.get_piece(action)
+            
+            if abs(row2 - row1) > 1:
+                reward = 0.5  
+            else:
+                reward = -0.5  
+
+            game_status = self.game_winner()
+            if game_status == player:
+                reward += 1  
+            elif game_status == -player:
+                reward -= 1  
+            elif game_status == 0:
+                reward += 0  
+        return self.board, reward
+
 
     def render(self):
-        print("  +" + "---+" * self.board_size)
+        game_state = " +" + "---+" * self.board_size + "\n"
         for row in self.board:
-            print(" | " + " | ".join("0" if square == 1 else "X" if square == -1 else " "
-                                      for square in row) + " |")
-            print("  +" + "---+" * self.board_size)
+            game_state += " | " + " | ".join("0" if square == 1 else "X" if square == -1 else " "
+                                            for square in row) + " |\n"
+            game_state += " +" + "---+" * self.board_size + "\n"
+        return game_state
 
 if __name__ == "__main__":
     game = CheckersGame(board_size=10)  
     game.render()
-    print(game.possible_actions(1))
+    print(game.generate_legal_moves(1))

@@ -1,5 +1,5 @@
 import numpy as np
-from checkers_game import CheckersGame
+from checkers_model import CheckersGame
 
 def test_checkers_game():
     
@@ -50,9 +50,9 @@ def test_checkers_game():
     assert game.available_pieces_of_the_player(-1) == [(5, 0), (5, 2), (5, 4), (5, 6), (6, 1), (6, 3), (6, 5), (6, 7), (7, 0), (7, 2), (7, 4), (7, 6)]
 
     # Test possible_actions
-    print(game.possible_actions(1))
-    assert game.possible_actions(1) == [(2, 1, 3, 0), (2, 1, 3, 2), (2, 3, 3, 2), (2, 3, 3, 4), (2, 5, 3, 4), (2, 5, 3, 6), (2, 7, 3, 6)]
-    assert game.possible_actions(-1) == [(5,0,4,1), (5,2,4,1), (5,2,4,3), (5,4,4,3), (5,4,4,5), (5,6,4,5), (5,6,4,7)]
+    print(game.generate_legal_moves(1))
+    assert game.generate_legal_moves(1) == [(2, 1, 3, 0), (2, 1, 3, 2), (2, 3, 3, 2), (2, 3, 3, 4), (2, 5, 3, 4), (2, 5, 3, 6), (2, 7, 3, 6)]
+    assert game.generate_legal_moves(-1) == [(5,0,4,1), (5,2,4,1), (5,2,4,3), (5,4,4,3), (5,4,4,5), (5,6,4,5), (5,6,4,7)]
 
     # Test get_piece
     action = (1, 0, 3, 3)
@@ -81,7 +81,7 @@ def test_checkers_game():
     # Test step
     action = (0, 1, 1, 0)
     player = 1
-    reward = game.step(action, player)
+    reward = game.perform_action_and_evaluate(action, player)
     print(game.board)
     assert np.array_equal(game.board, np.array([
         [0, 0, 0, 1, 0, 1, 0, 1],
@@ -97,7 +97,7 @@ def test_checkers_game():
 
     action = (0, 1, 1, 0)
     player = -1
-    reward = game.step(action, player)
+    reward = game.perform_action_and_evaluate(action, player)
     assert np.array_equal(game.board, np.array([
         [0, 0, 0, 1, 0, 1, 0, 1],
         [1, 0, 1, 0, 1, 0, 1, 0],
