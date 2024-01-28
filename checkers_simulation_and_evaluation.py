@@ -1,6 +1,7 @@
 from checkers_model import CheckersGame
 from Agents.minimax_agent import MinimaxAgent
 from Agents.random_agent import RandomAgent 
+from Agents.alphabeta_agent import AlphaBetaAgent
 import numpy as np
 class CheckersTrainingAndEvaluationSimulator:
     def __init__(self, agent1, agent2, board_size=8):
@@ -50,7 +51,7 @@ class CheckersTrainingAndEvaluationSimulator:
         results = {'agent1_wins': 0, 'agent2_wins': 0, 'draws': 0}
         with open(log_file_path, 'w') as log_file:
             for game_number in range(num_games):
-                print(f"Game {game_number + 1} started")
+                # print(f"Game {game_number + 1} started")
                 if log:
                     log_file.write(f"Game {game_number + 1} started\n")
                 game = CheckersGame(board_size=self.board_size)
@@ -95,13 +96,11 @@ class CheckersTrainingAndEvaluationSimulator:
 
 
 def main():
-    agent1 = RandomAgent(player_id=1)
-    agent2 = MinimaxAgent(player_id=-1)
-
-
+    agent1 = MinimaxAgent(player_id=1, depth=4)
+    # agent2 = AlphaBetaAgent(player_id=-1,depth=2)
+    agent2 = RandomAgent(player_id=-1)
     simulator = CheckersTrainingAndEvaluationSimulator(agent1, agent2, board_size=6)
-
-    results = simulator.evaluate_agents(num_games=10)
+    results = simulator.evaluate_agents(num_games=10,log = True)
     print(results)
     
 if __name__ == "__main__":
