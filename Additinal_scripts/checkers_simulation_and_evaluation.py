@@ -1,4 +1,12 @@
-from checkers_model import CheckersGame
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+parent_dir = os.path.join(current_dir, '../')
+sys.path.insert(0, parent_dir)
+
+
+from Assets.checkers_model import CheckersGame
 from Agents.minimax_agent import MinimaxAgent
 from Agents.random_agent import RandomAgent 
 from Agents.alphabeta_agent import AlphaBetaAgent
@@ -96,22 +104,11 @@ class CheckersTrainingAndEvaluationSimulator:
 
 
 def main():
-    board_size = 6  # 6x6 board
-    state_size = board_size ** 2  # 36 cells on the board
-
-    # Estimating action size: For simplicity, let's assume each piece can move to any other cell
-    # This is an overestimation and the actual game logic should filter illegal moves
-    action_size = board_size ** 2  # Each cell to every other cell
-
     agent1 = MinimaxAgent(player_id=1, depth=4)
-    agent2 = DQNAgent(player_id=-1, state_size=state_size, action_size=action_size)
-
-    simulator = CheckersTrainingAndEvaluationSimulator(agent1, agent2, board_size=board_size)
-
-    # Uncomment the next line to train the DQN agent
-    simulator.train_agents(num_games=10)
-
-    results = simulator.evaluate_agents(num_games=10, log=True)
+    # agent2 = AlphaBetaAgent(player_id=-1,depth=2)
+    agent2 = RandomAgent(player_id=-1)
+    simulator = CheckersTrainingAndEvaluationSimulator(agent1, agent2, board_size=6)
+    results = simulator.evaluate_agents(num_games=10,log_file_path="./ignored_files/logfile.txt",log = True)
     print(results)
     
 if __name__ == "__main__":

@@ -75,17 +75,6 @@ class CheckersGame:
             # jump
             self.board[captured_row][captured_col] = 0
 
-    def is_game_over(self):
-        """
-        Checks if the game is over.
-
-        Returns:
-            bool: True if the game is over, False otherwise.
-        """
-        # The game is over if either player has no remaining pieces or no legal moves.
-        return (len(self.available_pieces_of_the_player(1)) == 0 or
-                len(self.available_pieces_of_the_player(-1)) == 0 or
-                len(self.generate_legal_moves(self.player)) == 0)
 
     def game_winner(self):
         if np.sum(self.board<0) == 0:
@@ -146,11 +135,3 @@ class CheckersGame:
         return game_state
 
 
-    def get_state(self):
-        """
-        Returns the current state of the game.
-
-        Returns:
-            np.array: The current state of the game board.
-        """
-        return np.copy(self.board)

@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 import random
-from checkers_model import CheckersGame
+from Assets.checkers_model import CheckersGame
 from Agents.alphabeta_agent import AlphaBetaAgent
 from Agents.agent_base import Agent
 class CheckersAgent(Agent):

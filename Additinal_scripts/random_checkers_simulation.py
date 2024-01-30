@@ -1,6 +1,17 @@
 # random_checkers_simulation.py
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+parent_dir = os.path.join(current_dir, '../')
+sys.path.insert(0, parent_dir)
+
+
+
+
+
 import random
-from checkers_model import CheckersGame
+from Assets.checkers_model import CheckersGame
 import numpy as np
 def random_move(game, player):
     actions = game.generate_legal_moves(player)
@@ -10,7 +21,7 @@ def simulate_random_game(max_moves=1000):
     game = CheckersGame(board_size=8)
     move_count = 0
     current_player = 1
-    with open('game_simulation_log.txt', 'w') as log_file:
+    with open('./ignored_files/logfile.txt', 'w') as log_file:
         while move_count < max_moves and game.game_winner() == 0:
             available_actions = game.generate_legal_moves(current_player)
             action = random_move(game, current_player) if available_actions else None
