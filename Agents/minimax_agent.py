@@ -50,11 +50,3 @@ class MinimaxAgent(Agent):
         new_game_state.perform_action_and_evaluate(action, player)
         return new_game_state
 
-    def learn_from_experience(self, *args):
-        pass  # Minimax agent does not learn
-
-    def save_model(self, file_path):
-        pass  # Minimax agent has no model to save
-
-    def load_model(self, file_path):
-        pass  # Minimax agent has no model to load

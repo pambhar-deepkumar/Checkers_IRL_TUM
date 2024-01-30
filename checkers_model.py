@@ -11,7 +11,6 @@ class CheckersGame:
     def initialize(self):
         board = np.zeros((self.board_size, self.board_size))
         
-        # place the pieces for player 1 (denoted by 1) and player -1 (denoted by -1)
         for i in range(self.board_size):
             for j in range(self.board_size):
                 if (i + j) % 2 == 1:
@@ -76,6 +75,17 @@ class CheckersGame:
             # jump
             self.board[captured_row][captured_col] = 0
 
+    def is_game_over(self):
+        """
+        Checks if the game is over.
+
+        Returns:
+            bool: True if the game is over, False otherwise.
+        """
+        # The game is over if either player has no remaining pieces or no legal moves.
+        return (len(self.available_pieces_of_the_player(1)) == 0 or
+                len(self.available_pieces_of_the_player(-1)) == 0 or
+                len(self.generate_legal_moves(self.player)) == 0)
 
     def game_winner(self):
         if np.sum(self.board<0) == 0:
@@ -120,7 +130,13 @@ class CheckersGame:
                 reward += 0  
         return self.board, reward
 
-
+    def reset(self):
+        """
+        Resets the game to the initial state.
+        """
+        self.board = self.initialize()  # Reinitialize the board
+        self.player = 1
+        
     def render(self):
         game_state = " +" + "---+" * self.board_size + "\n"
         for row in self.board:
@@ -129,7 +145,12 @@ class CheckersGame:
             game_state += " +" + "---+" * self.board_size + "\n"
         return game_state
 
-if __name__ == "__main__":
-    game = CheckersGame(board_size=10)  
-    game.render()
-    print(game.generate_legal_moves(1))
+
+    def get_state(self):
+        """
+        Returns the current state of the game.
+
+        Returns:
+            np.array: The current state of the game board.
+        """
+        return np.copy(self.board)
