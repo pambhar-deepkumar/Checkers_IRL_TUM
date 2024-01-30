@@ -116,7 +116,8 @@ def train_agent(num_episodes, dql_agent, opponent_agent, game, update_target_eve
     dql_agent.save_model("dql_checkers_agent.pth")
 
 
-def train_agent(num_episodes, dql_agent, game, update_target_every=5):
+def train_agent(num_episodes, dql_agent, game):
+    update_target_every = 5
     for episode in range(num_episodes):
         game.reset()
         total_reward = 0
