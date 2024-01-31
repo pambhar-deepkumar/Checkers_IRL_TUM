@@ -23,7 +23,7 @@ def simulate_random_game(max_moves=1000):
     current_player = 1
     with open('./ignored_files/logfile.txt', 'w') as log_file:
         while move_count < max_moves and game.game_winner() == 0:
-            available_actions = game.generate_legal_moves(current_player)
+            available_actions = game.possible_actions(current_player)
             action = random_move(game, current_player) if available_actions else None
             log_file.write(f"Available actions for Player {current_player}: {available_actions}\n")
             if action:
@@ -42,9 +42,9 @@ def simulate_random_game(max_moves=1000):
             log_file.write(f"Player {winner} wins!\n Because all the pieces of the opponent are captured\n")
         elif np.sum(game.board>0) == 0:
             log_file.write(f"Player {winner} wins!\n Because all the pieces of the opponent are captured\n")
-        elif len(game.generate_legal_moves(-1)) == 0:
+        elif len(game.possible_actions(-1)) == 0:
             log_file.write(f"Player {winner} wins!\n Because the opponent has no possible actions\n")
-        elif len(game.generate_legal_moves(1)) == 0:
+        elif len(game.possible_actions(1)) == 0:
             log_file.write(f"Player {winner} wins!\n Because the opponent has no possible actions\n")
         
 

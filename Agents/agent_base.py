@@ -11,7 +11,7 @@ class Agent(ABC):
         self.player_id = player_id
 
     @abstractmethod
-    def select_action(self, game_state):
+    def select_action(self):
         """
         Abstract method to select an action based on the current game state.
 

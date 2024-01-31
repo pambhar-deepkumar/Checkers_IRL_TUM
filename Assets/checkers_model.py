@@ -1,14 +1,13 @@
 import numpy as np
 
 class CheckersGame:    
-    def __init__(self, board_size=8, player=1):
+    def __init__(self, board_size=8):
         if board_size not in [6,8,10]:
             raise ValueError("Board size must be 6, 8 or 10")
         self.board_size = board_size
-        self.board = self.initialize()
-        self.player = player
+        self.reset()
 
-    def initialize(self):
+    def reset(self):
         board = np.zeros((self.board_size, self.board_size))
         
         for i in range(self.board_size):
@@ -18,8 +17,8 @@ class CheckersGame:
                         board[i][j] = 1  # Player 1's pieces
                     elif i > (self.board_size // 2):
                         board[i][j] = -1  # Player -1's pieces
-        
         self.board = board
+        
         return board
 
     def available_pieces_of_the_player(self, player):
@@ -34,7 +33,7 @@ class CheckersGame:
         return [(i, j) for i, row in enumerate(self.board)
                 for j, value in enumerate(row) if value == player]
 
-    def generate_legal_moves(self, player):
+    def get_legal_moves(self, player):
         """
         Generates a list of all legal moves available to the player.
 
@@ -81,9 +80,9 @@ class CheckersGame:
             return 1
         elif np.sum(self.board>0) == 0:
             return -1
-        elif len(self.generate_legal_moves(-1)) == 0:
+        elif len(self.get_legal_moves(-1)) == 0:
             return 1
-        elif len(self.generate_legal_moves(1)) == 0:
+        elif len(self.get_legal_moves(1)) == 0:
             return -1
         else:
             return 0
@@ -100,7 +99,7 @@ class CheckersGame:
         """
         reward = 0
         row1, col1, row2, col2 = action
-        if action in self.generate_legal_moves(player):
+        if action in self.get_legal_moves(player):
             self.board[row1][col1] = 0
             self.board[row2][col2] = player
             self.get_piece(action)
@@ -119,13 +118,10 @@ class CheckersGame:
                 reward += 0  
         return self.board, reward
 
-    def reset(self):
-        """
-        Resets the game to the initial state.
-        """
-        self.board = self.initialize()  # Reinitialize the board
-        self.player = 1
-        
+
+    def get_state(self):
+        return self.board   
+    
     def render(self):
         game_state = " +" + "---+" * self.board_size + "\n"
         for row in self.board:
@@ -133,5 +129,4 @@ class CheckersGame:
                                             for square in row) + " |\n"
             game_state += " +" + "---+" * self.board_size + "\n"
         return game_state
-
 
