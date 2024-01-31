@@ -123,7 +123,7 @@ def train_agent(num_episodes, dql_agent, game):
         total_reward = 0
         state = game.get_state()
 
-        while not game.is_game_over():
+        while game.game_winner() ==0:
             # DQL Agent's turn
             action = dql_agent.select_action(state)
             new_state, reward, done = game.perform_action_and_evaluate(action, dql_agent.player_id)
@@ -150,17 +150,18 @@ def train_agent(num_episodes, dql_agent, game):
 
     dql_agent.save_model("dql_checkers_agent_solo.pth")
 
-# Usage
-# Initialize DQLAgent and CheckersGame as needed
-# train_agent(100, dql_agent, game)
 
 # Usage
 # Initialize DQLAgent, OpponentAgent, and CheckersGame as needed
 # train_agent(100, dql_agent, opponent_agent, game)
 
 # Example usage
-# state_size = # Define the size of the state representation
-# action_size = # Define the number of possible actions
-# dql_agent = DQLAgent(player_id=1, state_size=state_size, action_size=action_size)
+state_size = 32 # Define the size of the state representation
+action_size = 30# Define the number of possible actions
+dql_agent = DQLAgent(player_id=1, state_size=state_size, action_size=action_size)
+game = CheckersGame(board_size=8)
 
+# Usage
+# Initialize DQLAgent and CheckersGame as needed
+train_agent(100, dql_agent, game)
 # Train and use the agent similar to the CheckersAgent example
