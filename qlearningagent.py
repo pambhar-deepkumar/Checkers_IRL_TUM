@@ -35,8 +35,12 @@ class QLearningAgent(Agent):
         else:
             q_values = [self.get_q_value(state, action) for action in possible_actions]
             max_q_value = max(q_values)
-            # Exploitation: choose action with maximum Q-value
-            return possible_actions[q_values.index(max_q_value)]
+            
+            # Get all actions that have the maximum Q-value
+            max_q_actions = [action for action, q_value in zip(possible_actions, q_values) if q_value == max_q_value]
+            
+            # Randomly select among the actions with the maximum Q-value
+            return random.choice(max_q_actions)
 
     def update_q_table(self, state, action, reward, next_state, next_possible_actions):
         """Update the Q-table using the Bellman equation."""
@@ -71,47 +75,48 @@ def load_q_table(filename):
     return q_table
 
 
+def train_qagent_with_custom_agent(num_games, qagent, opponent_agent):
+    game = CheckersGame(8)
+    totalmoves = 0
+    # Training loop
+    for episode in range(num_games):
+        print(f"Episode {episode + 1}")
+        state = game.reset()
+        move_count = 0
+        while game.game_winner() == 0:
+            # Q agents move
+            state = game.get_state()
+            possible_actions = game.get_legal_moves(qagent.player_id)
+            action = qagent.select_action(state, possible_actions)
+            if action is None:
+                print("No possible actions, ending game")
+                break 
+            next_state, reward = game.perform_action_and_evaluate(action, qagent.player_id)
+            next_possible_actions = game.get_legal_moves(qagent.player_id)
+            qagent.update_q_table(state, action, reward, next_state, next_possible_actions)
+            
+            move_count += 1  # Increment move count
+            
+            
+            # Random players move
+            possible_actions = game.get_legal_moves(opponent_agent.player_id)
+            action = opponent_agent.select_action(game)
+            if action is None:
+                print("No possible actions, ending game")
+                break
+            next_state, reward = game.perform_action_and_evaluate(action, opponent_agent.player_id)
+            
+            move_count += 1  # Increment move count
+            
 
-# Example usage
+        # Print the number of moves played in this game
+        print(f"Game {episode + 1}: Total moves played = {move_count}")
+        totalmoves = totalmoves + move_count
+    
+    print("total moves played = ", totalmoves)  
+    save_q_table(qagent.q_table, "./ignored_files/initial_q_table.json")
+
 qagent = QLearningAgent(player_id=1)
-randomagent = RandomAgent(player_id=-1)
-game = CheckersGame(6)
-totalmoves = 0
-# Training loop
-for episode in range(10):
-    print(f"Episode {episode + 1}")
-    state = game.reset()
-    move_count = 0
-    while game.game_winner() == 0:
-        # Q agents move
-        state = game.get_state()
-        possible_actions = game.get_legal_moves(qagent.player_id)
-        action = qagent.select_action(state, possible_actions)
-        if action is None:
-            print("No possible actions, ending game")
-            break 
-        next_state, reward = game.perform_action_and_evaluate(action, qagent.player_id)
-        next_possible_actions = game.get_legal_moves(qagent.player_id)
-        qagent.update_q_table(state, action, reward, next_state, next_possible_actions)
-        
-        move_count += 1  # Increment move count
-        
-        
-        # Random players move
-        possible_actions = game.get_legal_moves(randomagent.player_id)
-        action = randomagent.select_action(game)
-        if action is None:
-            print("No possible actions, ending game")
-            break
-        next_state, reward = game.perform_action_and_evaluate(action, randomagent.player_id)
-        
-        move_count += 1  # Increment move count
-        
+opponent_agent = RandomAgent(player_id=-1)
 
-    # Print the number of moves played in this game
-    print(f"Game {episode + 1}: Total moves played = {move_count}")
-    totalmoves = totalmoves + move_count
-    
-    
-print("total moves played = ", totalmoves)  
-save_q_table(qagent.q_table, "./ignored_files/initial_q_table.json")
+train_qagent_with_custom_agent(10, qagent, opponent_agent)
