@@ -18,7 +18,7 @@ class AlphaBetaAgent(Agent):
         best_move = None
         if player == self.player_id:
             max_eval = float('-inf')
-            for move in game.get_legal_moves(player):
+            for move in game.possible_actions(player):
                 new_game_state = self.simulate_move(game, move, player)
                 eval, _ = self.alpha_beta_search(new_game_state, depth - 1, -player, alpha, beta)
                 if eval > max_eval:
@@ -30,7 +30,7 @@ class AlphaBetaAgent(Agent):
             return max_eval, best_move
         else:
             min_eval = float('inf')
-            for move in game.get_legal_moves(player):
+            for move in game.possible_actions(player):
                 new_game_state = self.simulate_move(game, move, player)
                 eval, _ = self.alpha_beta_search(new_game_state, depth - 1, -player, alpha, beta)
                 if eval < min_eval:
@@ -46,5 +46,5 @@ class AlphaBetaAgent(Agent):
 
     def simulate_move(self, game_state, action, player):
         new_game_state = copy.deepcopy(game_state)
-        new_game_state.perform_action_and_evaluate(action, player)
+        new_game_state.step(action, player)
         return new_game_state

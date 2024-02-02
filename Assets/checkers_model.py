@@ -33,7 +33,7 @@ class CheckersGame:
         return [(i, j) for i, row in enumerate(self.board)
                 for j, value in enumerate(row) if value == player]
 
-    def get_legal_moves(self, player):
+    def possible_actions(self, player):
         """
         Generates a list of all legal moves available to the player.
 
@@ -80,14 +80,14 @@ class CheckersGame:
             return 1
         elif np.sum(self.board>0) == 0:
             return -1
-        elif len(self.get_legal_moves(-1)) == 0:
+        elif len(self.possible_actions(-1)) == 0:
             return 1
-        elif len(self.get_legal_moves(1)) == 0:
+        elif len(self.possible_actions(1)) == 0:
             return -1
         else:
             return 0
 
-    def perform_action_and_evaluate(self, action, player):
+    def step(self, action, player):
         """Performs a step in the checkers game.
 
         Args:
@@ -99,7 +99,7 @@ class CheckersGame:
         """
         reward = 0
         row1, col1, row2, col2 = action
-        if action in self.get_legal_moves(player):
+        if action in self.possible_actions(player):
             self.board[row1][col1] = 0
             self.board[row2][col2] = player
             self.get_piece(action)
@@ -116,7 +116,7 @@ class CheckersGame:
                 reward -= 1  
             elif game_status == 0:
                 reward += 0  
-        return self.board, reward
+        return self.board, reward, game_status != 0
 
 
     def get_state(self):

@@ -3,16 +3,16 @@ import random
 from Assets.checkers_model import CheckersGame
 from Agents.random_agent import RandomAgent
 from Agents.alphabeta_agent import AlphaBetaAgent
-from Assets.qlearningagent import QLearningAgent
+from Agents.qlearning_agent import QLearningAgent
 from Agents.agent_base import Agent
 import json
 import setup
 
 # Training parameters
-NUM_EPISODES = 10
-EVALUATION_INTERVAL = 5
-EVALUATION_GAMES = 1
-FINAL_EVALUATION_GAMES = 10
+NUM_EPISODES = 2
+EVALUATION_INTERVAL = 2
+EVALUATION_GAMES = 2
+FINAL_EVALUATION_GAMES = 2
 GAMEBOARD_SIZE = 8  
 DEBUG = True
 # ==================================================================
@@ -40,21 +40,21 @@ def train_qagent_with_custom_agent(num_games, qagent, opponent_agent, evaluation
         state = game.reset()
         while game.game_winner() == 0:
             state = game.get_state()
-            possible_actions = game.get_legal_moves(qagent.player_id)
+            possible_actions = game.possible_actions(qagent.player_id)
             action = qagent.select_action(state, possible_actions)
             if action is None:
                 break
 
-            next_state, reward = game.perform_action_and_evaluate(action, qagent.player_id)
-            next_possible_actions = game.get_legal_moves(qagent.player_id)
+            next_state, reward = game.step(action, qagent.player_id)
+            next_possible_actions = game.possible_actions(qagent.player_id)
             qagent.update_q_table(state, action, reward, next_state, next_possible_actions)
             
-            possible_actions = game.get_legal_moves(opponent_agent.player_id)
+            possible_actions = game.possible_actions(opponent_agent.player_id)
             action = opponent_agent.select_action(game)
             if action is None:
                 break
 
-            next_state, reward = game.perform_action_and_evaluate(action, opponent_agent.player_id)
+            next_state, reward = game.step(action, opponent_agent.player_id)
     if DEBUG:
         print(f"Saving q_table.")
     q_table_filename = f"{setup.Q_TABLE_SAVE_BASENAME}_with_custom_agent.json"
@@ -72,13 +72,13 @@ def train_qagent_against_itself(num_games, qagent, evaluation_function):
         while game.game_winner() == 0:
             for player_id in [qagent.player_id, -qagent.player_id]:
                 state = game.get_state()
-                possible_actions = game.get_legal_moves(player_id)
+                possible_actions = game.possible_actions(player_id)
                 action = qagent.select_action(state, possible_actions)
                 if action is None:
                     break
 
-                next_state, reward = game.perform_action_and_evaluate(action, player_id)
-                next_possible_actions = game.get_legal_moves(player_id)
+                next_state, reward = game.step(action, player_id)
+                next_possible_actions = game.possible_actions(player_id)
                 qagent.update_q_table(state, action, reward, next_state, next_possible_actions)
 
                 if game.game_winner() != 0:

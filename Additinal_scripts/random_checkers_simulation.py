@@ -27,7 +27,7 @@ def simulate_random_game(max_moves=1000):
             action = random_move(game, current_player) if available_actions else None
             log_file.write(f"Available actions for Player {current_player}: {available_actions}\n")
             if action:
-                _, reward = game.perform_action_and_evaluate(action, current_player)
+                _, reward = game.step(action, current_player)
                 game_state = game.render()
                 log_file.write(f"Player {current_player} performed action: {action}\n")
                 log_file.write(f"Reward for the step: {reward}\n")

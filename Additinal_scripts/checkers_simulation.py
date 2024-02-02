@@ -53,13 +53,13 @@ class CheckersSimulator:
                     if log:
                         log_file.write(game.render())
                         log_file.write(f"Player {current_player}'s turn\n")
-                        log_file.write(f"Available actions: {game.get_legal_moves(current_player)}\n")
+                        log_file.write(f"Available actions: {game.possible_actions(current_player)}\n")
                     agent = self.agent1 if current_player == self.agent1.player_id else self.agent2
                     action = agent.select_action(game)
                     if log:
                         log_file.write(f"Action taken: {action}\n")
                     if action is not None:
-                        game.perform_action_and_evaluate(action, current_player)
+                        game.step(action, current_player)
                     num_moves += 1
 
                     current_player *= -1  # Switch player
@@ -79,9 +79,9 @@ class CheckersSimulator:
                         log_file.write(f"{'Agent1' if winner == self.agent1.player_id else 'Agent2'} wins!\n Because all the pieces of the opponent are captured\n")
                     elif np.sum(game.board>0) == 0:
                         log_file.write(f"{'Agent1' if winner == self.agent1.player_id else 'Agent2'} wins!\n Because all the pieces of the opponent are captured\n")
-                    elif len(game.get_legal_moves(self.agent1.player_id)) == 0:
+                    elif len(game.possible_actions(self.agent1.player_id)) == 0:
                         log_file.write(f"Agent 2 wins!\n Because the opponent has no possible actions\n")
-                    elif len(game.get_legal_moves(self.agent2.player_id)) == 0:
+                    elif len(game.possible_actions(self.agent2.player_id)) == 0:
                         log_file.write(f"Agent 1 wins!\n Because the opponent has no possible actions\n")
                     log_file.write(f"Game {game_number + 1} ended\n")
                     log_file.write(f"Stats so far: {results}\n")
