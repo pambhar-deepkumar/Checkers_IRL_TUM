@@ -1,0 +1,15 @@
+board_size: 8
+
+model_training:
+  epochs: 32
+  batch_size: 64
+
+# paths:
+#   metrics_model_save_path: './models/8/metrics_model/'
+#   board_model_save_path: './models/8/board_model/'
+#   reinforced_model_save_path: './models/8/reinforced_model/'
+
+paths:
+  metrics_model_save_path: './models/test/metrics_model/'
+  board_model_save_path: './models/test/board_model/'
+  reinforced_model_save_path: './models/test/reinforced_model/'

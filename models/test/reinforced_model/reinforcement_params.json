@@ -1,0 +1,14 @@
+{
+    "num_generations": 5,
+    "games_per_generation": 200,
+    "learning_rate": 0.5,
+    "discount_factor": 0.95,
+    "model_save_path": "./models/test/reinforced_model/reinforced_model.h5",
+    "winrates": [
+        56,
+        51,
+        45,
+        53,
+        52
+    ]
+}
