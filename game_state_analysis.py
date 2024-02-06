@@ -144,7 +144,7 @@ def train_board_model(data, metrics, winning, metrics_model, epochs=32, batch_si
 
     # input dimensions is 32 board position values
     board_model = Sequential([
-        Dense(64, activation='relu', input_dim=32),
+        Dense(64, activation='relu', input_dim=checker_env.COMPRESS_SIZE),
         Dense(32, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
         Dense(16, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
         Dense(8, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
@@ -198,7 +198,7 @@ def reinforce_model(board_model = None, model_json_path = None, model_weights_pa
     else:
         reinforced_model = board_model
     # Initialize variables
-    data = np.zeros((1, 32))  # Assuming the board representation is 32 units
+    data = np.zeros((1, checker_env.COMPRESS_SIZE))  # Assuming the board representation is 32 units
     labels = np.zeros(1)
     win = lose = draw = 0
     winrates = []
@@ -206,7 +206,7 @@ def reinforce_model(board_model = None, model_json_path = None, model_weights_pa
     # Run generations
     for gen in tqdm(range(num_generations), desc="Generations"):
         for game in range(games_per_generation):
-            temp_data = np.zeros((1, 32))
+            temp_data = np.zeros((1, checker_env.COMPRESS_SIZE))
             board = checker_env.expand(checker_env.np_board())
             player = np.sign(np.random.random() - 0.5)
             turn = 0
@@ -243,7 +243,7 @@ def reinforce_model(board_model = None, model_json_path = None, model_weights_pa
 
         if gen % 10 == 0 or gen == num_generations - 1:  # Optionally adjust the frequency
             reinforced_model.fit(data[1:], labels[1:], epochs=16, batch_size=256, verbose=0)
-            data = np.zeros((1, 32))
+            data = np.zeros((1, checker_env.COMPRESS_SIZE))
             labels = np.zeros(1)
         
         # Calculate and store winrate for the current generation
