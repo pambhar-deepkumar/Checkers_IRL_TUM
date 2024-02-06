@@ -1,5 +1,5 @@
 import yaml
-from game_state_analysis import *
+from models import *
 def read_config(config_path='config.yaml'):
     """
     Reads a YAML configuration file and returns a dictionary.
