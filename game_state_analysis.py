@@ -46,7 +46,7 @@ def train_metrics_model(metrics, winning, epochs=32, batch_size=64, input_dim=9,
     metrics_model = Sequential([
         Dense(32, activation='relu', input_dim=input_dim),
         Dense(16, activation='relu', kernel_regularizer=regularizers.l2(regularization)),
-        Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(regularization))  # Using sigmoid for binary classification
+        Dense(1, activation='relu', kernel_regularizer=regularizers.l2(regularization))  # Using sigmoid for binary classification
     ])
     metrics_model.compile(optimizer='nadam', loss='binary_crossentropy', metrics=["acc"])
     print("Fitting metrics model...")

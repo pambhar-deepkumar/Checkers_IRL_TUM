@@ -248,7 +248,7 @@ def get_metrics(board):
     mid = at_middle(b) - at_middle(reverse(b))
     far = at_enemy(b) - at_enemy(reverse(b))
     won = game_winner(b)
-    score = 4*capped + potential + men + caps + 2*semicaps + 3*uncaps + 2*mid + 3*far + 100*won
+    score = 4*capped +  4*potential + 4*men + caps + 2*semicaps + 3*uncaps + 4*mid + 2*far + 100*won
     if score < 0:
         label = -1
     else:
