@@ -130,3 +130,43 @@ class CheckersGame:
             game_state += " +" + "---+" * self.board_size + "\n"
         return game_state
 
+    
+    def compress_board(self,board):
+        rows, cols = board.shape  # Get dimensions of the board
+        # Calculate the total number of relevant squares (half of all squares for a checkerboard)
+        num_relevant_squares = (rows * cols) // 2
+        # Initialize the compressed array with the correct size
+        board = np.zeros((num_relevant_squares), dtype='b')
+        
+        index = 0  # Start index for filling the compressed array
+        for i in range(rows):
+            for j in range(cols):
+                # Select squares based on the checkerboard pattern
+                if (i + j) % 2 == (1 if rows % 2 == 0 else 0):
+                    # This condition ensures we're selecting the correct squares
+                    # Adjusted to work with both even and odd number of columns
+                    board[index] = board[i, j]
+                    index += 1        
+        return board
+    
+    
+    def simulate_next_boards_player_1(self):
+        actions = self.possible_actions(1)
+        temp_board = self.board.copy()
+        bb = np.array([self.compress_board(temp_board)])
+        if actions is None:
+            return None
+        for action in actions:
+            temp_board = self.board.copy()
+            row1, col1, row2, col2 = action
+            temp_board[row1][col1] = 0
+            temp_board[row2][col2] = 1
+            if abs(action[2] - action [0]) > 1:
+                captured_row = (action[0] + action[2]) // 2
+                captured_col = (action[1] + action[3]) // 2
+                temp_board[captured_row][captured_col] = 0
+                
+            bb = np.vstack((bb, self.compress(temp_board)))
+            
+        return bb[1:]
+            
