@@ -116,7 +116,7 @@ class CheckersGame:
                 reward -= 1  
             elif game_status == 0:
                 reward += 0  
-        return self.board, reward, game_status != 0
+        return self.board, reward
 
 
     def get_state(self):

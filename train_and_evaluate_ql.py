@@ -7,13 +7,14 @@ from Agents.qlearning_agent import QLearningAgent
 from Agents.agent_base import Agent
 import json
 import setup
+import tqdm
 
 # Training parameters
-NUM_EPISODES = 2
-EVALUATION_INTERVAL = 2
-EVALUATION_GAMES = 2
-FINAL_EVALUATION_GAMES = 2
-GAMEBOARD_SIZE = 8  
+NUM_EPISODES = 10000
+EVALUATION_INTERVAL = 2000
+EVALUATION_GAMES = 50
+FINAL_EVALUATION_GAMES = 100
+GAMEBOARD_SIZE = 6  
 DEBUG = True
 # ==================================================================
 def save_q_table(q_table, filename):
@@ -31,7 +32,7 @@ def load_q_table(filename):
 
 def train_qagent_with_custom_agent(num_games, qagent, opponent_agent, evaluation_function):
     game = CheckersGame(GAMEBOARD_SIZE)
-    for episode in range(num_games):
+    for episode in tqdm.tqdm(range(num_games), desc="Training QAgent"):
         if episode % EVALUATION_INTERVAL == 0:
             if DEBUG:
                 print(f"Performing evaluation at episode {episode}")
@@ -92,34 +93,46 @@ def train_qagent_against_itself(num_games, qagent, evaluation_function):
 
 def evaluate_agent(game, qagent, opponent_agent, num_games):
     wins = 0
+    draws = 0
 
     for i in range(num_games):
         state = game.reset()
         while game.game_winner() == 0:
-            action = qagent.select_action(state, game.get_legal_moves(qagent.player_id))
-            state, _ = game.perform_action_and_evaluate(action, qagent.player_id)
-            if game.game_winner() != 0:
+            action = qagent.select_action(state, game.possible_actions(qagent.player_id))
+            if game.possible_actions(qagent.player_id) is None:
                 break
+            state, _ = game.step(action, qagent.player_id)
+            
 
+            
             action = opponent_agent.select_action(game)
-            state, _ = game.perform_action_and_evaluate(action, opponent_agent.player_id)
-
+            if game.possible_actions(opponent_agent.player_id) is None:
+                break
+            state, _ = game.step(action, opponent_agent.player_id)
+            
+            
+            
         if game.game_winner() == qagent.player_id:
             wins += 1
+        elif game.game_winner() == 0:
+            draws += 1
 
-    return wins
+    return wins, draws
 
 def periodic_evaluation(qagent, episode, evaluation_results):
     game = CheckersGame(GAMEBOARD_SIZE)
     random_agent = RandomAgent(player_id=-1)
     alphabeta_agent = AlphaBetaAgent(player_id=-1)
 
-    wins_against_random = evaluate_agent(game, qagent, random_agent, EVALUATION_GAMES)
-    wins_against_alphabeta = evaluate_agent(game, qagent, alphabeta_agent, EVALUATION_GAMES)
+    wins_against_random, draws_against_random= evaluate_agent(game, qagent, random_agent, EVALUATION_GAMES)
+    wins_against_alphabeta, draws_against_alphabeta = evaluate_agent(game, qagent, alphabeta_agent, EVALUATION_GAMES)
 
     evaluation_results[episode] = {
+        "game_played": EVALUATION_GAMES,
         "wins_against_random": wins_against_random,
-        "wins_against_alphabeta": wins_against_alphabeta
+        "draws_against_random": draws_against_random,
+        "wins_against_alphabeta": wins_against_alphabeta,
+        "draws_against_alphabeta": draws_against_alphabeta
     }
 
 def final_evaluation(qagent, evaluation_results, agent_type):
@@ -127,12 +140,15 @@ def final_evaluation(qagent, evaluation_results, agent_type):
     random_agent = RandomAgent(player_id=-1)
     alphabeta_agent = AlphaBetaAgent(player_id=-1)
 
-    wins_against_random = evaluate_agent(game, qagent, random_agent, FINAL_EVALUATION_GAMES)
-    wins_against_alphabeta = evaluate_agent(game, qagent, alphabeta_agent, FINAL_EVALUATION_GAMES)
+    wins_against_random,draws_against_random = evaluate_agent(game, qagent, random_agent, FINAL_EVALUATION_GAMES)
+    wins_against_alphabeta,draws_against_alphabeta = evaluate_agent(game, qagent, alphabeta_agent, FINAL_EVALUATION_GAMES)
 
     evaluation_results[f"final_{agent_type}"] = {
+        "game_played": FINAL_EVALUATION_GAMES,
         "wins_against_random": wins_against_random,
-        "wins_against_alphabeta": wins_against_alphabeta
+        "draws_against_random": draws_against_random,
+        "wins_against_alphabeta": wins_against_alphabeta,
+        "draws_against_alphabeta": draws_against_alphabeta
     }
 
 def train_and_evaluate():
@@ -145,23 +161,12 @@ def train_and_evaluate():
     evaluation_results = {"random": {}, "alphabeta": {}, "self": {}}
 
     if DEBUG:
-        print("Training against random agent")
-    train_qagent_with_custom_agent(NUM_EPISODES, qagent_random, RandomAgent(player_id=-1), 
-                                   lambda qagent, ep: periodic_evaluation(qagent, ep, evaluation_results["random"]))
-    if DEBUG:
         print("Training against alphabeta agent")
     train_qagent_with_custom_agent(NUM_EPISODES, qagent_alphabeta, AlphaBetaAgent(player_id=-1), 
                                    lambda qagent, ep: periodic_evaluation(qagent, ep, evaluation_results["alphabeta"]))
     if DEBUG:
-        print("Training against itself")
-    train_qagent_against_itself(NUM_EPISODES, qagent_self, 
-                                lambda qagent, ep: periodic_evaluation(qagent, ep, evaluation_results["self"]))
-
-    if DEBUG:
         print("Final evaluation")
     final_evaluation(qagent_random, evaluation_results, "random")
-    final_evaluation(qagent_alphabeta, evaluation_results, "alphabeta")
-    final_evaluation(qagent_self, evaluation_results, "self")
 
     with open(setup.EVALUATION_RESULTS_FILENAME, 'w') as file:
         json.dump(evaluation_results, file)

@@ -6,5 +6,5 @@ class RandomAgent(Agent):
         super().__init__(player_id)
 
     def select_action(self, game):
-        legal_moves = game.get_legal_moves(self.player_id)
+        legal_moves = game.possible_actions(self.player_id)
         return random.choice(legal_moves) if legal_moves else None
