@@ -1,20 +1,25 @@
 # Checkers Game
 
-This branch is used to train Deep Q-Learning Agent fr Checkers game.
+This branch of the Checkers_IRL_TUM project is dedicated to training a Deep Q-Learning Agent for the Checkers game. The goal is to develop an agent that can learn effective strategies for playing Checkers through reinforcement learning techniques, specifically utilizing Deep Q-Learning.
 
 ## Setup
 
 ### Creating a Virtual Environment
 
-To isolate the dependencies of this project, it's recommended to use a virtual environment.
+Isolating the project dependencies is crucial for managing the project's environment. You can create a virtual environment using the following commands:
+```python
+python -m venv venv
+source venv/bin/activate  # On Unix/macOS
+venv\Scripts\activate  # On Windows
+```
+After activating your virtual environment, install the required dependencies:
 
-Dependecies required : 
-tensorflow-cpu
-numpy
-keras
-matplotlib
-tqdm
-pyyaml
+- tensorflow-cpu
+- numpy
+- keras
+- matplotlib
+- tqdm
+- pyyaml
 
 ### How to run 
 Please ucomment the code as required in the model_training.py. And run following command
