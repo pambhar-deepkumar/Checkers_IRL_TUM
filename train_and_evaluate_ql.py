@@ -99,14 +99,14 @@ def evaluate_agent(game, qagent, opponent_agent, num_games):
         state = game.reset()
         while game.game_winner() == 0:
             action = qagent.select_action(state, game.possible_actions(qagent.player_id))
-            if game.possible_actions(qagent.player_id) is None:
+            if action is None:
                 break
             state, _ = game.step(action, qagent.player_id)
             
 
             
             action = opponent_agent.select_action(game)
-            if game.possible_actions(opponent_agent.player_id) is None:
+            if action is None:
                 break
             state, _ = game.step(action, opponent_agent.player_id)
             

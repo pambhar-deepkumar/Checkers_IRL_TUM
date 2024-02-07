@@ -136,7 +136,7 @@ class CheckersGame:
         # Calculate the total number of relevant squares (half of all squares for a checkerboard)
         num_relevant_squares = (rows * cols) // 2
         # Initialize the compressed array with the correct size
-        board = np.zeros((num_relevant_squares), dtype='b')
+        compressed_board = np.zeros((num_relevant_squares), dtype='b')
         
         index = 0  # Start index for filling the compressed array
         for i in range(rows):
@@ -145,12 +145,13 @@ class CheckersGame:
                 if (i + j) % 2 == (1 if rows % 2 == 0 else 0):
                     # This condition ensures we're selecting the correct squares
                     # Adjusted to work with both even and odd number of columns
-                    board[index] = board[i, j]
+                    compressed_board[index] = board[i, j]
                     index += 1        
-        return board
+        return compressed_board
     
     
     def simulate_next_boards_player_1(self):
+        
         actions = self.possible_actions(1)
         temp_board = self.board.copy()
         bb = np.array([self.compress_board(temp_board)])
@@ -166,7 +167,7 @@ class CheckersGame:
                 captured_col = (action[1] + action[3]) // 2
                 temp_board[captured_row][captured_col] = 0
                 
-            bb = np.vstack((bb, self.compress(temp_board)))
+            bb = np.vstack((bb, self.compress_board(temp_board)))
             
         return bb[1:]
             
