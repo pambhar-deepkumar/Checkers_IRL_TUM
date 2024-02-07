@@ -1,6 +1,16 @@
 # Checkers Game
+This branch of the Checkers_IRL_TUM project aims to create a competitive AI for playing Checkers using Q-Learning, a reinforcement learning algorithm. It features a modular design allowing for easy experimentation with different AI strategies and opponent models.
 
-This project is a Checkers game that uses Q-Learning for training the AI.
+## Project Overview
+
+Project Structure
+- Agents/: Contains different agent implementations including Q-Learning Agent, Random Agent, and AlphaBeta Agent.
+- Assets/: Includes the Checkers game model and utilities for managing game state and rules.
+- trained_models/: Directory for storing trained models and their weights.
+- setup.py: Configuration script for setting up project paths and environment variables.
+- requirements.txt: Lists all the project dependencies for easy installation.
+- train_and_evaluate_ql.py: Main script for training the Q-Learning agent and evaluating its performance against other agents.
+- README.md: Provides project documentation, setup instructions, and usage guidelines.
 
 ## Setup
 
