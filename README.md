@@ -48,6 +48,12 @@ After setting the parameters, you can start the training and evaluation process 
 ```
 python train_and_evaluate_ql.py
 ```
+
+### Output
+The output you should get after executing train_and_evaluation_ql.py: 
+![alt text](https://github.com/pambhar-deepkumar/Checkers_IRL_TUM/blob/qlearning/Assets/Qlearning.jpg)
+
+
 ## Customization Guide
 
 - Agent Strategies: Implement new strategies in the Agents/ directory. Use the Agent base class as a template.
