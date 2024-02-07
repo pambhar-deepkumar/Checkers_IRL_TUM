@@ -37,13 +37,15 @@ python model_training.py
 
 The codebase is structured into several key components:
 
-checker_env: A custom module that simulates the Checkers game environment, including board initialization, generating possible moves, and evaluating game states.
-model_training.py: The main script for training the Deep Q-Learning Agent, which includes functions for training models, evaluating them, and saving the trained models.
-config.yaml: A configuration file used for specifying paths for saving models and other training parameters.
+- checker_env: A custom module that simulates the Checkers game environment, including board initialization, generating possible moves, and evaluating game states.
+- model_training.py: The main script for training the Deep Q-Learning Agent, which includes functions for training models, evaluating them, and saving the trained models.
+- config.yaml: A configuration file used for specifying paths for saving models and other training parameters.
 
-##Key Functions
+## Key Functions
 - generate_game_states: Generates a set of game states to be used for training.
 - train_metrics_model: Trains a model to predict winning moves based on game metrics.
 - train_board_model: Trains a model based on the board state to predict the likelihood of winning.
 - reinforce_model: Utilizes reinforcement learning to refine the strategies of the trained model.
+
+
 
