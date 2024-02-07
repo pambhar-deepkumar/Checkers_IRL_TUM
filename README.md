@@ -28,13 +28,13 @@ After activating the virtual environment, you can install the necessary dependen
 pip install -r requirements.txt
 ```
 
-Configuration
+## Configuration
 
 Before running the project, configure the paths in the setup.py file to specify where the models and other outputs should be stored. This includes paths for saving the Q table and the evaluation results after training. After setting up you should run setup.py.
 
 
+### Adjust training parameters in train_and_evaluate_ql.py for Q-Learning:
 
-You can then edit the parameters in train_and_evaluate_ql.py for Q-Learning:
 ```Python
 # Training parameters
 NUM_EPISODES = 10
@@ -48,5 +48,9 @@ After setting the parameters, you can start the training and evaluation process 
 ```
 python train_and_evaluate_ql.py
 ```
+## Customization Guide
 
-Please replace `<name_of_venv>` with the name you want to give to your virtual environment.
+- Agent Strategies: Implement new strategies in the Agents/ directory. Use the Agent base class as a template.
+- Game Rules: Modify game logic in Assets/checkers_model.py to experiment with different rule sets or board sizes.
+- Training Parameters: Adjust parameters in train_and_evaluate_ql.py for different training durations, evaluation frequencies, and game settings.
+
