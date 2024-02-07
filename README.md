@@ -52,7 +52,7 @@ python train_and_evaluate_ql.py
 ## Output
 The output you should get after executing train_and_evaluation_ql.py: 
 
-### All the Q Value tables in a folder: 
+### All the generated Q Value tables in a folder: 
 ![alt text](https://github.com/pambhar-deepkumar/Checkers_IRL_TUM/blob/qlearning/Assets/QTablejson.jpg)
 
 ### The Q Value table in the JSON format:
