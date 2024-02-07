@@ -42,6 +42,7 @@ The codebase is structured into several key components:
 - config.yaml: A configuration file used for specifying paths for saving models and other training parameters.
 
 ## Key Functions
+
 - generate_game_states: Generates a set of game states to be used for training.
 - train_metrics_model: Trains a model to predict winning moves based on game metrics.
 - train_board_model: Trains a model based on the board state to predict the likelihood of winning.
