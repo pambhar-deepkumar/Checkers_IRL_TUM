@@ -8,11 +8,13 @@ This branch is used to train Deep Q-Learning Agent fr Checkers game.
 
 To isolate the dependencies of this project, it's recommended to use a virtual environment.
 
-Dependecies required : tensorflow-cpu
+Dependecies required : 
+tensorflow-cpu
 numpy
-pyyaml
-tqdm
+keras
 matplotlib
+tqdm
+pyyaml
 
 ### How to run 
 Please ucomment the code as required in the model_training.py. And run following command
